@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: trivy-system
+
+# declare ConfigMap from a ConfigMapGenerator
+configMapGenerator:
+- name: trivy-operator-policies-config
+  options:
+    disableNameSuffixHash: true
+  literals:
+    - policy.multiple_replicas.kinds=Workload
+    - policy.use_podtopologyspreadconstraints.kinds=Workload
+    - policy.cpu_requests_not_specified.kinds=Workload
+    - policy.cpu_not_limited.kinds=Workload
+    - policy.memory_requests_not_specified.kinds=Workload
+    - policy.memory_not_limited.kinds=Workload
+    - policy.use_livenessprobe.kinds=Workload
+    - policy.use_readinessprobe.kinds=Workload
+  files:
+    - library.kubernetes.rego=lib/kubernetes.rego
+    - library.utils.rego=lib/utils.rego
+    - policy.multiple_replicas.rego=multiple_replicas.rego
+    - policy.use_podtopologyspreadconstraints.rego=use_podtopologyspreadconstraints.rego
+    - policy.cpu_requests_not_specified.rego=cpu_requests_not_specified.rego
+    - policy.cpu_not_limited.rego=cpu_not_limited.rego
+    - policy.memory_requests_not_specified.rego=memory_requests_not_specified.rego
+    - policy.memory_not_limited.rego=memory_not_limited.rego
+    - policy.use_livenessprobe.rego=use_livenessprobe.rego
+    - policy.use_readinessprobe.rego=use_readinessprobe.rego
